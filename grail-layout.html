@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>圣杯布局</title>
+    <style>
+        .container {
+           height: 500px;
+            padding: 0 200px 0 220px;
+        }
+        .middle,.aside,.offside {
+            float: left;
+            height: 100%;
+            position: relative;
+        }
+        .middle {
+            width: 100%;
+            background: lightblue;
+        }
+        .aside {
+            width: 220px;
+            background: lightcoral;
+            margin-left: -100%;
+            left: -220px;
+        }
+        .offside {
+            width: 200px;
+            background: lemonchiffon;
+            margin-left: -200px;
+            right: -200px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="middle">middle</div>
+    <div class="aside">aside</div>
+    <div class="offside">offside</div>
+</div>
+
+</body>
+</html>

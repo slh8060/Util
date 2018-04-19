@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        ul li {
+            float: left;
+            list-style: none;
+        }
+        .slider {
+            width: 500px;
+            height: 333px;
+            border: 1px solid #ddd;
+            padding: 8px;
+            position: fixed;
+            top:20%;
+            margin: auto;
+            left: 0;
+            right: 0;
+        }
+        .slider-box {
+            width: 500px;
+            height: 333px;
+            overflow: hidden;
+        }
+        .slider-wrap {
+            width: 600%;
+            position: relative;
+            height: 333px;
+        }
+        .slider-order {
+            position: absolute;
+            bottom: 17px;
+            right: 17px;
+        }
+        .slider-order li {
+            float: left;
+            padding: 2px 8px;
+            color: #000;
+            margin-left: 8px;
+            border-radius: 50%;
+            font-size: 12px;
+            cursor: pointer;
+            background: lightpink;
+
+        }
+        .slider-order .current {
+            background: darkorchid;
+        }
+        img {
+            width: 500px;
+            height: 333px;
+
+        }
+        .move {
+            position: absolute;
+            padding: 10px;
+            background: #cccccc;
+            border: 1px solid #d1c7c7;
+            top: 43%;
+            font-size: 20px;
+            color: #999;
+            display: none;
+            z-index: 1;
+        }
+        .prev {
+            left: 10px;
+
+        }
+        .next {
+            right: 10px;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+<div class="slider">
+    <div class="slider-box">
+        <ul class="slider-wrap" id="ul">
+            <li class="slider-img"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523954671462&di=1e5529df0270ef7e7c44a80776aa2b60&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F36%2F42%2F78U58PICQyk_1024.jpg" alt=""></li>
+            <li class="slider-img"><img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2809797134,1648169205&fm=27&gp=0.jpg" alt=""></li>
+            <li class="slider-img"><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2401288657,543313882&fm=27&gp=0.jpg" alt=""></li>
+            <!--<li class="slider-img"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523954671462&di=1e5529df0270ef7e7c44a80776aa2b60&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F36%2F42%2F78U58PICQyk_1024.jpg" alt=""></li>-->
+
+        </ul>
+        <button class="move prev"><</button>
+        <button class="move next">></button>
+
+        <ul class="slider-order" id="ol">
+            <li class="current">1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+    </div>
+</div>
+
+<script src="libs/jquery-3.1.0.js"></script>
+<script>
+    $(function () {
+        var timer;
+
+        var ulLi = $('.slider-img');
+        var imgWidth = $('img').width();
+        var olLi = $('#ol li');
+
+        var order = 0;
+        var circle = 0;
+
+//        autoplay();
+        //自动播放
+        function autoplay() {
+            timer = setInterval(function () {
+                order ++;
+                if (order > ulLi.length - 1) {
+                    $('#ul').css('left', '0');
+                    order = 1;
+                }
+                moveImg(order);
+                circle >= olLi.length - 1 ? circle = 0 : circle += 1;
+                moveCircle(circle);
+            }, 1500);
+
+        }
+
+        //图片移动
+        function moveImg(order) {
+            $('#ul').animate({left: -order * imgWidth}, 1000);
+        }
+
+        //图片圆点
+        function moveCircle(circle) {
+            $('#ol').children('li').removeClass('current');
+            $(olLi[circle]).addClass('current');
+        }
+
+        $('#ol li').on('mouseenter', function () {
+            clearInterval(timer);
+            order = $('#ol li').index(this);
+            circle = $('#ol li').index(this);
+            moveImg(order);
+            moveCircle(circle);
+        }).on('mouseleave', function () {
+            autoplay();
+        });
+
+        $('#ul').on('mouseenter', function () {
+            clearInterval(timer);
+            $('.move').show();
+        }).on('mouseleave', function () {
+            autoplay();
+            $('.move').hide();
+        });
+
+        $('.move').mouseenter(function () {
+           $('.move').show();
+        }).mouseleave(function () {
+            $('.move').hide();
+        });
+
+        $('.prev').on('click', function (e) {
+            e.preventDefault();
+            clearInterval(timer);
+            order === 0 ? order = ulLi.length - 1 : order --;
+            moveImg(order);
+            moveCircle(order);
+        });
+
+        $('.next').on('click', function (e) {
+            e.preventDefault();
+            clearInterval(timer);
+            order === ulLi.length - 1 ? order = 0 : order ++;
+            moveImg(order);
+            moveCircle(order);
+        });
+
+
+
+
+    })
+</script>
+</body>
+</html>

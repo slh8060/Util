@@ -8,36 +8,42 @@
             margin: 0;
             padding: 0;
         }
+
         ul li {
             float: left;
             list-style: none;
         }
+
         .slider {
             width: 500px;
             height: 333px;
             border: 1px solid #ddd;
             padding: 8px;
             position: fixed;
-            top:20%;
+            top: 20%;
             margin: auto;
             left: 0;
             right: 0;
         }
+
         .slider-box {
             width: 500px;
             height: 333px;
             overflow: hidden;
         }
+
         .slider-wrap {
             width: 600%;
             position: relative;
             height: 333px;
         }
+
         .slider-order {
             position: absolute;
             bottom: 17px;
             right: 17px;
         }
+
         .slider-order li {
             float: left;
             padding: 2px 8px;
@@ -49,14 +55,17 @@
             background: lightpink;
 
         }
+
         .slider-order .current {
             background: darkorchid;
         }
+
         img {
             width: 500px;
             height: 333px;
 
         }
+
         .move {
             position: absolute;
             padding: 10px;
@@ -68,15 +77,15 @@
             display: none;
             z-index: 1;
         }
+
         .prev {
             left: 10px;
 
         }
+
         .next {
             right: 10px;
         }
-
-
 
 
     </style>
@@ -85,10 +94,15 @@
 <div class="slider">
     <div class="slider-box">
         <ul class="slider-wrap" id="ul">
-            <li class="slider-img"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523954671462&di=1e5529df0270ef7e7c44a80776aa2b60&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F36%2F42%2F78U58PICQyk_1024.jpg" alt=""></li>
-            <li class="slider-img"><img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2809797134,1648169205&fm=27&gp=0.jpg" alt=""></li>
-            <li class="slider-img"><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2401288657,543313882&fm=27&gp=0.jpg" alt=""></li>
-            <!--<li class="slider-img"><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523954671462&di=1e5529df0270ef7e7c44a80776aa2b60&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F36%2F42%2F78U58PICQyk_1024.jpg" alt=""></li>-->
+            <li class="slider-img"><img
+                    src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523954671462&di=1e5529df0270ef7e7c44a80776aa2b60&imgtype=0&src=http%3A%2F%2Fpic.58pic.com%2F58pic%2F15%2F36%2F42%2F78U58PICQyk_1024.jpg"
+                    alt=""></li>
+            <li class="slider-img"><img
+                    src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2809797134,1648169205&fm=27&gp=0.jpg"
+                    alt=""></li>
+            <li class="slider-img"><img
+                    src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2401288657,543313882&fm=27&gp=0.jpg"
+                    alt=""></li>
 
         </ul>
         <button class="move prev"><</button>
@@ -105,6 +119,10 @@
 <script src="libs/jquery-3.1.0.js"></script>
 <script>
     $(function () {
+        //复制第一张，实现无缝切换
+        var first = $('.slider-wrap li:first').clone();
+        $('.slider-wrap').append(first);
+
         var timer;
 
         var ulLi = $('.slider-img');
@@ -114,13 +132,14 @@
         var order = 0;
         var circle = 0;
 
-//        autoplay();
+        autoplay();
+
         //自动播放
         function autoplay() {
             timer = setInterval(function () {
-                order ++;
+                order++;
                 if (order > ulLi.length - 1) {
-                    $('#ul').css('left', '0');
+                    $('#ul').animate({left: 0}, 0);
                     order = 1;
                 }
                 moveImg(order);
@@ -143,8 +162,7 @@
 
         $('#ol li').on('mouseenter', function () {
             clearInterval(timer);
-            order = $('#ol li').index(this);
-            circle = $('#ol li').index(this);
+            circle = order = $('#ol li').index(this);
             moveImg(order);
             moveCircle(circle);
         }).on('mouseleave', function () {
@@ -160,7 +178,7 @@
         });
 
         $('.move').mouseenter(function () {
-           $('.move').show();
+            $('.move').show();
         }).mouseleave(function () {
             $('.move').hide();
         });
@@ -168,20 +186,31 @@
         $('.prev').on('click', function (e) {
             e.preventDefault();
             clearInterval(timer);
-            order === 0 ? order = ulLi.length - 1 : order --;
+
+            if (order === 0) {
+                $('#ul').animate({left: -(ulLi.length - 1) * imgWidth}, 0);
+                order = ulLi.length - 2;
+            } else {
+                order--;
+            }
             moveImg(order);
-            moveCircle(order);
+            circle === 0 ? circle = olLi.length - 1 : circle--;
+            moveCircle(circle);
         });
 
         $('.next').on('click', function (e) {
             e.preventDefault();
             clearInterval(timer);
-            order === ulLi.length - 1 ? order = 0 : order ++;
+            if (order === ulLi.length - 1) {
+                $('#ul').animate({left: 0}, 0);
+                order = 1;
+            } else {
+                order++;
+            }
             moveImg(order);
-            moveCircle(order);
+            circle === olLi.length - 1 ? circle = 0 : circle++;
+            moveCircle(circle);
         });
-
-
 
 
     })

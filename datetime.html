@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h3>
+    <span>当前时间：</span>
+    <span class="showToDay"></span>
+</h3>
+<h3>
+    <span>本周第一天：</span>
+    <span class="weekFirstDay"></span>
+</h3>
+<h3>
+    <span>本周最后一天：</span>
+    <span class="weekLastDay"></span>
+</h3>
+<h3>
+    <span>本月第一天：</span>
+    <span class="showMonthFirstDay"></span>
+</h3>
+<h3>
+    <span>本月最后一天：</span>
+    <span class="showMonthLastDay"></span>
+</h3>
+<h3>
+    <span>UTC时间转为北京时间(2018-05-22T07:22:05.277Z):</span>
+    <span class="formatDate"></span>
+</h3>
+</body>
+<script src="libs/jquery-3.1.0.js"></script>
+<script>
+    /**
+     * 本周第一天
+     * @returns {string}
+     */
+    function weekFirstDay() {
+        var Nowdate=new Date();
+        var WeekFirstDay=new Date(Nowdate-(Nowdate.getDay()-1)*86400000);
+        return Number(WeekFirstDay.getFullYear()) + "-" + Number(WeekFirstDay.getMonth()+1)+"-"+WeekFirstDay.getDate();
+    }
+
+    /**
+     * 本周最后一天
+     * @returns {string}
+     */
+    function weekLastDay() {
+        var Nowdate=new Date();
+        var WeekFirstDay=new Date(Nowdate-(Nowdate.getDay()-1)*86400000);
+        var WeekLastDay=new Date((WeekFirstDay/1000+6*86400)*1000);
+        return Number(WeekFirstDay.getFullYear()) + "-" + Number(WeekFirstDay.getMonth()+1)+"-"+WeekLastDay.getDate();
+    }
+
+    /**
+     * 当前时间
+     * @returns {string}
+     */
+    function showToDay() {
+        var Nowdate=new Date();
+        return Number(Nowdate.getFullYear()) + "-" + Number(Nowdate.getMonth()+1)+"-"+Nowdate.getDate();
+    }
+
+    /**
+     * 本月第一天
+     * @returns {string}
+     */
+    function showMonthFirstDay() {
+        var Nowdate=new Date();
+        var MonthFirstDay=new Date(Nowdate.getFullYear(),Nowdate.getMonth(),1);
+        return Number(MonthFirstDay.getFullYear()) + "-" + Number(MonthFirstDay.getMonth()+1)+"-"+MonthFirstDay.getDate();
+    }
+
+    /**
+     * 本月最后一天
+     * @returns {string}
+     */
+    function showMonthLastDay()
+    {
+        var Nowdate=new Date();
+        var MonthNextFirstDay=new Date(Nowdate.getFullYear(),Nowdate.getMonth()+1,1);
+        var MonthLastDay=new Date(MonthNextFirstDay-86400000);
+        return Number(MonthLastDay.getFullYear()) + "-" + Number(MonthLastDay.getMonth()+1)+"-"+MonthLastDay.getDate();
+    }
+
+    /**
+     * UTC时间转为北京时间
+     * @param timeStamp
+     * @returns {{year: number, month: number, day: number, hour: number, mimute: number, second: number}}
+     */
+    function formatDate(timeStamp) {
+         // 转为正常的时间格式 年-月-日 时:分:秒
+         var T_pos = timeStamp.indexOf('T');
+         var Z_pos = timeStamp.indexOf('Z');
+         var year_month_day = timeStamp.substr(0,T_pos);
+         var hour_minute_second = timeStamp.substr(T_pos+1,Z_pos-T_pos-1);
+         var new_datetime = year_month_day+" "+hour_minute_second; // 2017-03-31 08:02:06
+
+         //兼容IOS，将xxxx-xx-xx的时间格式，转换为 xxxx/xx/xx的格式
+         new_datetime = new_datetime.replace(/\-/g, "/"); // 2017/03/31 08:02:06
+        var time = new Date(new_datetime);
+        var year = time.getFullYear();
+        var month = time.getMonth() + 1;
+        var day = time.getDate();
+        var hour = time.getHours();
+        var mimute = time.getMinutes();
+        var second = time.getSeconds();
+        var week = ['周一','周二','周三','周四','周五','周六','周日'][time.getDay()];
+
+        return {
+            year: year, month: month, day: day, week:week, hour: hour, mimute: mimute, second: second,
+            date: year + '-' + month + '-' + day
+        };
+    }
+
+
+    $('.weekFirstDay').text(weekFirstDay());
+    $('.weekLastDay').text(weekLastDay());
+    $('.showToDay').text(showToDay());
+    $('.showMonthFirstDay').text(showMonthFirstDay());
+    $('.showMonthLastDay').text(showMonthLastDay());
+    $('.formatDate').text(formatDate('2018-05-22T07:22:05.277Z').date)
+
+</script>
+</html>

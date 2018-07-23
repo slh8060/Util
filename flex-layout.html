@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>flex布局</title>
+    <style>
+        .container {
+            height: 500px;
+            display: flex;
+        }
+        .main {
+            background: lightblue;
+            width: 100%;
+        }
+        .sub {
+            background: lemonchiffon;
+            width: 200px;
+            order: -1;
+        }
+        .extra {
+            background: lightcoral;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="main">main</div>
+    <div class="sub">sub</div>
+    <div class="extra">extra</div>
+</div>
+</body>
+</html>
